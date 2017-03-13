@@ -2,11 +2,11 @@ var fs = require('fs');
 
 //  Jenkins build params
 const PINGS_FOLDER = process.env.pings_folder
-const CLIENT_PREFIX = process.env.client_prefix;
+const INSTANCE_ID = process.env.instance_id;
 const PING_SUCCESS_RATE = 1 * process.env.ping_success_rate;
 
 //  Other constants
-const STATS_HISTORY_FILE = "./stats_history_" + CLIENT_PREFIX + ".json";
+const STATS_HISTORY_FILE = "./stats_history_" + INSTANCE_ID + ".json";
 const STATS_HISTORY_FILE_MAX_SIZE = 100;
 
 //
