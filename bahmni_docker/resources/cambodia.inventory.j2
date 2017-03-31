@@ -1,13 +1,13 @@
 localhost ansible_connection=local
-bahmni ansible_connection=docker
+{{hostname}} ansible_connection={{connection_Type}}
 
 [nagios-server]
 
 [bahmni-emr]
-bahmni
+{{hostname}}
 
 [bahmni-emr-db]
-bahmni
+{{hostname}}
 
 [bahmni-emr-db-slave]
 
