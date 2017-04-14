@@ -31,29 +31,29 @@ def setup(skip_container, skip_ansible, skip_database, yes, distribution):
 
 	client = docker.from_env()
 
-	# Build a temporary image
-	click.echo('Building a new temporary Docker image with appropriate files for this distribution...')
-	
-	if os.path.exists('/tmp/bahmni-build'):
-		shutil.rmtree('/tmp/bahmni-build')
-
-	os.mkdir('/tmp/bahmni-build')
-	shutil.copyfile('./resources/link-sources.sh', '/tmp/bahmni-build/link-sources.sh')
-	shutil.copyfile('./resources/%s_openmrs_base.sql.gz' % distribution, '/tmp/bahmni-build/%s_openmrs_base.sql.gz' % distribution)
-
-	# Render the Jinja2 inventory file to be copied on the container
-	local_Inventory = renderJinja2Inventoryfile(distribution, "localhost")
-	with open("/tmp/bahmni-build/%s-local.inventory" % distribution, "w") as text_file:
-       	    text_file.write(local_Inventory)
-
-
-	# Render the Jinja2 Dockerfile with appropirate values
-	renderJinja2Dockerfile(distribution, image_Name)
-
-	distro_Image = client.images.build(path='/tmp/bahmni-build')
-	click.echo(distro_Image.id[8:21])
-
 	if  not skip_container:
+		# Build a temporary image
+		click.echo('Building a new temporary Docker image with appropriate files for this distribution...')
+	
+		if os.path.exists('/tmp/bahmni-build'):
+			shutil.rmtree('/tmp/bahmni-build')
+
+		os.mkdir('/tmp/bahmni-build')
+		shutil.copyfile('./resources/link-sources.sh', '/tmp/bahmni-build/link-sources.sh')
+		shutil.copyfile('./resources/%s_openmrs_base.sql.gz' % distribution, '/tmp/bahmni-build/%s_openmrs_base.sql.gz' % distribution)
+
+		# Render the Jinja2 inventory file to be copied on the container
+		local_Inventory = renderJinja2Inventoryfile(distribution, "localhost")
+		with open("/tmp/bahmni-build/%s-local.inventory" % distribution, "w") as text_file:
+	       	    text_file.write(local_Inventory)
+
+
+		# Render the Jinja2 Dockerfile with appropirate values
+		renderJinja2Dockerfile(distribution, image_Name)
+
+		distro_Image = client.images.build(path='/tmp/bahmni-build')
+		click.echo(distro_Image.id[8:21])
+
 		click.echo("Starting new Bahmni temporary container based on '%s' Docker image..." % distro_Image.id[8:21])
 		bahmni_Container = client.containers.run(distro_Image.id, hostname=hostname, name=container_Name, tty=True, stdin_open=True, detach=True)
 	else:
