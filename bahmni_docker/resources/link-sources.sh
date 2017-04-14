@@ -19,3 +19,7 @@ sudo ln -s /mnt/openmrs_config /opt/openmrs/configuration
 # Bahmni Apps
 sudo rm -r /opt/bahmni-web/etc/bahmniapps
 sudo ln -s /mnt/bahmniapps /opt/bahmni-web/etc/bahmniapps
+
+# Logs
+sudo rm -r /mnt/logs/openmrs.log
+sudo ln -s /opt/openmrs/openmrs.log /mnt/logs/openmrs.log
