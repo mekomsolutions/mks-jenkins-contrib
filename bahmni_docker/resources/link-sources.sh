@@ -1,25 +1,36 @@
 #!/bin/bash
 
 # Modules directory
-sudo rm -r /opt/openmrs/modules
-sudo ln -s /mnt/modules /opt/openmrs/modules
+rm -r /opt/openmrs/modules
+ln -s /mnt/modules /opt/openmrs/modules
+chown -h bahmni:bahmni /opt/openmrs/modules
 
 # openmrs.war
-sudo rm /opt/openmrs/openmrs.war
-sudo ln -s /mnt/war/openmrs.war /opt/openmrs/openmrs.war
+rm /opt/openmrs/openmrs.war
+ln -s /mnt/war/openmrs.war /opt/openmrs/openmrs.war
+chown -h bahmni:bahmni /opt/openmrs/openmrs.war
 
 # Bahmni config
-sudo rm -r /opt/bahmni-web/etc/bahmni_config
-sudo ln -s /mnt/bahmni_config /opt/bahmni-web/etc/bahmni_config
+rm -r /opt/bahmni-web/etc/bahmni_config
+ln -s /mnt/bahmni_config /opt/bahmni-web/etc/bahmni_config
+chown -h bahmni:bahmni /opt/openmrs/bahmni_config
 
 # OpenMRS config
-sudo rm -r /opt/openmrs/configuration
-sudo ln -s /mnt/openmrs_config /opt/openmrs/configuration
+rm -r /opt/openmrs/configuration
+ln -s /mnt/openmrs_config /opt/openmrs/configuration
+chown -h bahmni:bahmni /opt/openmrs/configuration
 
 # Bahmni Apps
-sudo rm -r /opt/bahmni-web/etc/bahmniapps
-sudo ln -s /mnt/bahmniapps /opt/bahmni-web/etc/bahmniapps
+rm -r /opt/bahmni-web/etc/bahmniapps
+ln -s /mnt/bahmniapps /opt/bahmni-web/etc/bahmniapps
+chown -h bahmni:bahmni /opt/bahmni-web/etc/bahmniapps
 
 # Logs
-sudo rm -r /mnt/logs/openmrs.log
-sudo ln -s /opt/openmrs/openmrs.log /mnt/logs/openmrs.log
+rm -r /opt/openmrs/openmrs.log
+rm -r /mnt/logs/openmrs.log
+touch /mnt/logs/openmrs.log
+ln -s /mnt/logs/openmrs.log /opt/openmrs/openmrs.log
+chown -h bahmni:bahmni /opt/openmrs/openmrs.log
+
+# Ensure correct access rights
+sudo chown -R bahmni:bahmni /mnt/
