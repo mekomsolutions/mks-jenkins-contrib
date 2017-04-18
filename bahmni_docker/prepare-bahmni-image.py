@@ -18,20 +18,25 @@ from jinja2 import Environment, FileSystemLoader
 def setup(skip_container, skip_ansible, skip_database, yes, distribution):
 
 	"""This script prepares a Bahmni docker image for a specific DISTRIBUTION, to be used as a base to deploy new docker containers."""
+	docker_Username = os.environ.get("DOCKER_USER") or "mekomsolutions"
+	if not os.environ.get("DOCKER_PASSWORD"):
+		click.echo('[ERROR] No DOCKER_PASSWORD environment variable found. Please set one to later commit your Docker image on remote Docker repository. Docker username is \'%s\'.' %docker_Username )
+	if yes and not os.environ.get("DOCKER_PASSWORD"):
+		click.echo('[ERROR] \'-y (--yes)\' option is provided but no DOCKER_PASSWORD environment variable found. Please set DOCKER_PASSWORD. Aborting...')
+		sys.exit(1)
 
 	container_Name = "bahmni"
 	hostname = "bahmni"
-	image_Name="bahmni/centos:6.8"
-
-	# Retrieve Git Bahmni PLaybooks repo version
-	ansible_Home = os.environ['HOME'] + '/repos/bahmni-playbooks'
-	repo = git.Repo(ansible_Home)
-	assert not repo.bare
-	version=repo.head.reference
-
+	base_Image_Name="mekomsolutions/centos:6.8"
 	client = docker.from_env()
 
-	if  not skip_container:
+	# Retrieve Git Bahmni PLaybooks repo version
+	ansible_Home = os.environ.get('HOME') + '/repos/bahmni-playbooks'
+	repo = git.Repo(ansible_Home)
+	assert not repo.bare
+	version = repo.head.reference
+
+	if not skip_container:
 		# Build a temporary image
 		click.echo('Building a new temporary Docker image with appropriate files for this distribution...')
 	
@@ -49,7 +54,7 @@ def setup(skip_container, skip_ansible, skip_database, yes, distribution):
 
 
 		# Render the Jinja2 Dockerfile with appropirate values
-		renderJinja2Dockerfile(distribution, image_Name)
+		renderJinja2Dockerfile(distribution, base_Image_Name)
 
 		distro_Image = client.images.build(path='/tmp/bahmni-build')
 		click.echo(distro_Image.id[8:21])
@@ -78,16 +83,19 @@ def setup(skip_container, skip_ansible, skip_database, yes, distribution):
 		openmrs_DB = "openmrs_base.sql.gz"
 		click.echo("Execute database restore based on '%s:/data/openmrs/%s'... (previously copied from './resources/%s_%s)" % (bahmni_Container.name, openmrs_DB, distribution, openmrs_DB))
 		bahmni_Container.exec_run('sudo bahmni -i local.inventory restore --restore_type=db --options=openmrs --strategy=dump --restore_point=%s' % openmrs_DB)
-	if not yes:
-		if click.confirm("Do you wish to commit this container as '%s/%s:%s' Docker image? ('%s' container will be terminated)" % (container_Name, distribution, version, container_Name)):
-			commit_Image(bahmni_Container, distribution, version)
-	else:
-		commit_Image(bahmni_Container, distribution, version)
-		
 
-def commit_Image(container, distribution, version):
-		click.echo("Commiting image '%s/%s:%s'..." % (container.name, distribution, version))
-		container.commit('%s/%s' % (container.name, distribution), tag=version)
+	if not yes:
+		if click.confirm("Do you wish to commit and push this container as '%s/%s:%s-%s' Docker image? ('%s' container will be terminated)" % (docker_Username, container_Name, distribution, version, container_Name)):
+			commit_Image(client, docker_Username, bahmni_Container, distribution, version)
+	else:
+		commit_Image(client, docker_Username, bahmni_Container, distribution, version)
+
+def commit_Image(client, username, container, distribution, version):
+		client.login(username, os.environ.get("DOCKER_PASSWORD"))
+		click.echo("Commiting image %s/%s:%s-%s'..." % (username, container.name, distribution, version))
+		container.commit('%s/%s' % (username, container.name), tag="%s-%s" % (distribution, version))
+		click.echo("Pushing image %s/%s:%s-%s'..." % (username, container.name, distribution, version))
+		client.images.push('%s/%s' % (username, container.name), tag="%s-%s" % (distribution, version))
 		click.echo("Destroying the '%s' container..." % container.name)
 		container.remove(v=True, force=True)
 	
