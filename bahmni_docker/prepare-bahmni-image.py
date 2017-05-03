@@ -85,20 +85,29 @@ def setup(skip_container, skip_ansible, skip_database, yes, distribution):
 		bahmni_Container.exec_run('sudo bahmni -i local.inventory restore --restore_type=db --options=openmrs --strategy=dump --restore_point=%s' % openmrs_DB)
 
 	if not yes:
-		if click.confirm("Do you wish to commit and push this container as '%s/%s:%s-%s' Docker image? ('%s' container will be terminated)" % (docker_Username, container_Name, distribution, version, container_Name)):
-			commit_Image(client, docker_Username, bahmni_Container, distribution, version)
+		if click.confirm("Do you wish to locally commit the '%s' container as '%s/%s:%s-%s' Docker image?" % (container_Name, docker_Username, container_Name, distribution, version)):
+			commit_Image(docker_Username, bahmni_Container, distribution, version)
+			if click.confirm("Do you wish to push the newly created '%s/%s:%s-%s' Docker image to remote repository?" % (docker_Username, container_Name, distribution, version)):
+				push_Image(client, docker_Username, bahmni_Container, distribution, version)
+			if click.confirm("Do you wish to destroy the '%s' temporary container" % container_Name):
+				destroy_Container(bahmni_Container)
 	else:
-		commit_Image(client, docker_Username, bahmni_Container, distribution, version)
+		commit_Image(docker_Username, bahmni_Container, distribution, version)
+		push_Image(client, docker_Username, bahmni_Container, distribution, version)
+		destroy_Container(bahmni_Container)
 
-def commit_Image(client, username, container, distribution, version):
-		client.login(username, os.environ.get("DOCKER_PASSWORD"))
+def commit_Image(username, container, distribution, version):
 		click.echo("Commiting image %s/%s:%s-%s'..." % (username, container.name, distribution, version))
 		container.commit('%s/%s' % (username, container.name), tag="%s-%s" % (distribution, version))
+		
+def push_Image(client, username, container, distribution, version):
+		client.login(username, os.environ.get("DOCKER_PASSWORD"))
 		click.echo("Pushing image %s/%s:%s-%s'..." % (username, container.name, distribution, version))
 		client.images.push('%s/%s' % (username, container.name), tag="%s-%s" % (distribution, version))
+
+def destroy_Container(container):
 		click.echo("Destroying the '%s' container..." % container.name)
 		container.remove(v=True, force=True)
-	
 
 def renderJinja2Dockerfile(distribution, image_Name):
 	THIS_DIR = os.path.dirname(os.path.abspath(__file__))
