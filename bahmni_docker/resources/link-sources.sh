@@ -26,11 +26,8 @@ ln -s /mnt/bahmniapps /opt/bahmni-web/etc/bahmniapps
 chown -h bahmni:bahmni /opt/bahmni-web/etc/bahmniapps
 
 # Logs
-rm -r /opt/openmrs/openmrs.log
 rm -r /mnt/logs/openmrs.log
-touch /mnt/logs/openmrs.log
-ln -s /mnt/logs/openmrs.log /opt/openmrs/openmrs.log
-chown -h bahmni:bahmni /opt/openmrs/openmrs.log
+ln -s /opt/openmrs/openmrs.log /mnt/logs/openmrs.log
 
 # Ensure correct access rights
 sudo chown -R bahmni:bahmni /mnt/
