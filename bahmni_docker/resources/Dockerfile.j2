@@ -4,7 +4,7 @@ MAINTAINER Mekom Solutions <info@mekomsolutions.com>
 RUN mkdir -p /etc/bahmni-installer
 COPY ./link-sources.sh /etc/bahmni-installer/
 COPY ./{{distribution}}-local.inventory /etc/bahmni-installer/local.inventory
+COPY ./update-apache-config.sh /etc/bahmni-installer/
 
 RUN mkdir -p /data/openmrs
 COPY ./{{distribution}}_openmrs_base.sql.gz /data/openmrs/openmrs_base.sql.gz
-
