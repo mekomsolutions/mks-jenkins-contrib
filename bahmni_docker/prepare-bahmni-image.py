@@ -45,6 +45,7 @@ def setup(skip_container, skip_ansible, skip_database, yes, distribution):
 
 		os.mkdir('/tmp/bahmni-build')
 		shutil.copyfile('./resources/link-sources.sh', '/tmp/bahmni-build/link-sources.sh')
+		shutil.copyfile('./resources/update-apache-config.sh', '/tmp/bahmni-build/update-apache-config.sh')
 		shutil.copyfile('./resources/%s_openmrs_base.sql.gz' % distribution, '/tmp/bahmni-build/%s_openmrs_base.sql.gz' % distribution)
 
 		# Render the Jinja2 inventory file to be copied on the container
