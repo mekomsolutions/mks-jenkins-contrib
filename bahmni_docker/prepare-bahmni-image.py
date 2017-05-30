@@ -10,12 +10,11 @@ from jinja2 import Environment, FileSystemLoader
 @click.command()
 @click.option('--skip_container', is_flag=True, help="Skip the creation of the Bahmni container - in case it already exists")
 @click.option('--skip_ansible', is_flag=True, help="Skip the Ansible installer on the Bahmni container - used for debug mostly")
-@click.option('--skip_database', is_flag=True, help="Skip the database restore on the Bahmni container - used for debug mostly")
 @click.option('--yes', '-y', is_flag=True, help="Answer 'yes' to user prompts - used to run the script programmatically")
 @click.argument('distribution')
 
 
-def setup(skip_container, skip_ansible, skip_database, yes, distribution):
+def setup(skip_container, skip_ansible, yes, distribution):
 
 	"""This script prepares a Bahmni docker image for a specific DISTRIBUTION, to be used as a base to deploy new docker containers."""
 	docker_Username = os.environ.get("DOCKER_USER") or "mekomsolutions"
@@ -46,7 +45,6 @@ def setup(skip_container, skip_ansible, skip_database, yes, distribution):
 		os.mkdir('/tmp/bahmni-build')
 		shutil.copyfile('./resources/link-sources.sh', '/tmp/bahmni-build/link-sources.sh')
 		shutil.copyfile('./resources/update-apache-config.sh', '/tmp/bahmni-build/update-apache-config.sh')
-		shutil.copyfile('./resources/%s_openmrs_base.sql.gz' % distribution, '/tmp/bahmni-build/%s_openmrs_base.sql.gz' % distribution)
 
 		# Render the Jinja2 inventory file to be copied on the container
 		local_Inventory = renderJinja2Inventoryfile(distribution, "localhost")
@@ -75,16 +73,11 @@ def setup(skip_container, skip_ansible, skip_database, yes, distribution):
 	        with open("%s/%s.inventory" %  (ansible_Home, distribution), "w") as text_file:
        		     text_file.write(container_Inventory)
 
-		ansible_Command="cd %s && ansible-playbook -i %s.inventory all.yml --skip-tags 'selinux,iptables' --extra-vars '@/etc/bahmni-installer/setup.yml' --extra-vars '@/etc/bahmni-installer/rpm_versions.yml'" % (ansible_Home, distribution)
+		ansible_Command="cd %s && ansible-playbook -i %s.inventory all.yml --skip-tags 'selinux,iptables' --extra-vars 'docker=true' --extra-vars '@/etc/bahmni-installer/setup.yml' --extra-vars '@/etc/bahmni-installer/rpm_versions.yml'" % (ansible_Home, distribution)
 		click.echo(ansible_Command)
 
 		call(ansible_Command, shell=True)
 	
-	if not skip_database:
-		openmrs_DB = "openmrs_base.sql.gz"
-		click.echo("Execute database restore based on '%s:/data/openmrs/%s'... (previously copied from './resources/%s_%s)" % (bahmni_Container.name, openmrs_DB, distribution, openmrs_DB))
-		bahmni_Container.exec_run('sudo bahmni -i local.inventory restore --restore_type=db --options=openmrs --strategy=dump --restore_point=%s' % openmrs_DB)
-
 	if not yes:
 		if click.confirm("Do you wish to locally commit the '%s' container as '%s/%s:%s-%s' Docker image?" % (container_Name, docker_Username, container_Name, distribution, version)):
 			commit_Image(docker_Username, bahmni_Container, distribution, version)
