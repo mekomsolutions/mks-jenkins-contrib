@@ -18,7 +18,9 @@ if (repo.match("-config-") == "-config-") {
   configType = repoSplit[0];
   distro = repoSplit[repoSplit.length - 1];
 } else if (repo.match("bahmniapps") == "bahmniapps") {
-  project = process.env.bahmniappsProject;
+  project = process.env.bahmniAppsProject;
+} else if (repo.match("bahmni-core") == "bahmni-core") {
+  project = process.env.bahmniCoreProject;
 } else {
   // if project is not provided as input parameter, ie, the job is triggered by a parent project
   if (project == "") {
