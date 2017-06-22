@@ -29,11 +29,13 @@ if (repo.match("-config-") == "-config-") {
 }
 
 // If branch is "master", server is "test", otherwise, the server is the branch name
-if (branch == "master") {
-  server = "test";
-} else {
-  server = branch;
-}
+// if (branch == "dev") {
+//   server = "master";
+// } else {
+//   server = branch;
+// }
+server = branch;
+
 
 envvars = envvars +  "project=" + project + "\n";
 envvars = envvars +  "configType=" + configType + "\n";
