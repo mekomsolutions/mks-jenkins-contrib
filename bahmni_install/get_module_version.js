@@ -7,8 +7,6 @@ if (! process.env.distro) {
 
   var envvars = "";
   var moduleName = process.env.repo;
-  var moduleNameSplit = moduleName.split('-');
-  var moduleShortName = moduleNameSplit[moduleNameSplit.length - 1];
   var skipVersion = false;
 
   // For now, we only call the distro_compare_module_version with a skipVersion=true parameter
@@ -33,7 +31,6 @@ if (! process.env.distro) {
   /* Export environment variables */
   function exportVars () {
     envvars = envvars +  "moduleName=" + moduleName + "\n";
-    envvars = envvars +  "moduleShortName=" + moduleShortName + "\n";
     envvars = envvars +  "moduleVersion=" + moduleVersion + "\n";
     envvars = envvars +  "skipVersion=" + skipVersion + "\n";
     fs.appendFile(process.env.WORKSPACE + "/envvars", envvars, function(err) {
