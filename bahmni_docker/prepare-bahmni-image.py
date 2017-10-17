@@ -26,7 +26,7 @@ def setup(skip_container, skip_ansible, yes, distribution):
 
 	container_Name = "bahmni"
 	hostname = "bahmni"
-	base_Image_Name="mekomsolutions/centos:6.8"
+	base_Image_Name="centos:6.8"
 	client = docker.from_env()
 
 	# Retrieve Git Bahmni PLaybooks repo version
@@ -124,7 +124,7 @@ def renderJinja2Inventoryfile(distribution, hostname):
 	else:
 		connection_Type = "docker"
 
-        inventory_Str = j2_env.get_template('resources/%s.inventory.j2' % distribution).render(
+        inventory_Str = j2_env.get_template('resources/inventories/%s.inventory.j2' % distribution).render(
                 hostname=hostname, connection_Type=connection_Type
         )
 	return inventory_Str

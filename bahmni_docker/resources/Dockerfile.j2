@@ -1,6 +1,10 @@
 FROM {{image}}
 MAINTAINER Mekom Solutions <info@mekomsolutions.com>
 
+RUN yum install -y openssh-server
+RUN yum install -y sudo
+RUN yum install -y nano
+
 RUN mkdir -p /etc/bahmni-installer
 COPY ./link-mounted-folders.sh /etc/bahmni-installer/
 COPY ./{{distribution}}-local.inventory /etc/bahmni-installer/local.inventory
