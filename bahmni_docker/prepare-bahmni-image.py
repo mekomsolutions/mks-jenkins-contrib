@@ -43,7 +43,7 @@ def setup(skip_container, skip_ansible, yes, distribution):
 			shutil.rmtree('/tmp/bahmni-build')
 
 		os.mkdir('/tmp/bahmni-build')
-		shutil.copyfile('./resources/link-sources.sh', '/tmp/bahmni-build/link-sources.sh')
+		shutil.copyfile('./resources/link-mounted-folders.sh', '/tmp/bahmni-build/link-mounted-folders.sh')
 		shutil.copyfile('./resources/update-apache-config.sh', '/tmp/bahmni-build/update-apache-config.sh')
 
 		# Render the Jinja2 inventory file to be copied on the container
