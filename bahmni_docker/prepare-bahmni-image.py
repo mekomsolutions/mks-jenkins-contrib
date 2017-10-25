@@ -45,6 +45,7 @@ def setup(skip_container, skip_ansible, yes, distribution):
 		os.mkdir('/tmp/bahmni-build')
 		shutil.copyfile('./resources/link-mounted-folders.sh', '/tmp/bahmni-build/link-mounted-folders.sh')
 		shutil.copyfile('./resources/update-apache-config.sh', '/tmp/bahmni-build/update-apache-config.sh')
+		shutil.copyfile('./resources/%s.setup.yml' % distribution, '/tmp/bahmni-build/%s.setup.yml' % distribution)
 
 		# Render the Jinja2 inventory file to be copied on the container
 		local_Inventory = renderJinja2Inventoryfile(distribution, "localhost")
@@ -52,7 +53,7 @@ def setup(skip_container, skip_ansible, yes, distribution):
 	       	    text_file.write(local_Inventory)
 
 
-		# Render the Jinja2 Dockerfile with appropirate values
+		# Render the Jinja2 Dockerfile with appropriate values
 		renderJinja2Dockerfile(distribution, base_Image_Name)
 
 		distro_Image = client.images.build(path='/tmp/bahmni-build')
@@ -73,7 +74,7 @@ def setup(skip_container, skip_ansible, yes, distribution):
 	        with open("%s/%s.inventory" %  (ansible_Home, distribution), "w") as text_file:
        		     text_file.write(container_Inventory)
 
-		ansible_Command="cd %s && ansible-playbook -i %s.inventory all.yml --skip-tags 'selinux,iptables' --extra-vars 'docker=true' --extra-vars '@/etc/bahmni-installer/setup.yml' --extra-vars '@/etc/bahmni-installer/rpm_versions.yml'" % (ansible_Home, distribution)
+		ansible_Command="cd %s && ansible-playbook -i %s.inventory all.yml --skip-tags 'selinux,iptables' --extra-vars 'docker=true' --extra-vars '@/tmp/bahmni-build/%s.setup.yml' --extra-vars '@/etc/bahmni-installer/rpm_versions.yml'" % (ansible_Home, distribution, distribution)
 		click.echo(ansible_Command)
 
 		call(ansible_Command, shell=True)
