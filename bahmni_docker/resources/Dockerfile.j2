@@ -7,6 +7,9 @@ RUN yum install -y sudo
 RUN yum install -y nano
 
 RUN rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+RUN yum install -y python-pip
+RUN pip install --upgrade pip
+RUN pip install --upgrade setuptools
 
 RUN mkdir -p /etc/bahmni-installer
 COPY ./link-mounted-folders.sh /etc/bahmni-installer/
