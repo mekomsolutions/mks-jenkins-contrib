@@ -78,7 +78,7 @@ def setup(skip_container, skip_ansible, yes, distribution):
 		click.echo(ansible_Command)
 
 		call(ansible_Command, shell=True)
-	
+
 	if not yes:
 		if click.confirm("Do you wish to locally commit the '%s' container as '%s/%s:%s-%s' Docker image?" % (container_Name, docker_Username, container_Name, distribution, version)):
 			commit_Image(docker_Username, bahmni_Container, distribution, version)
