@@ -10,8 +10,8 @@ var configType = "";
 var distro = "";
 var server = "";
 
-// For the specific case of '...-config-...'like repos, the Jenkins project name is not equal to the repo name.
-// Bahmni Config jenkins job is generic but the repo is distribution specific.
+// For the specific case of '...-config-...'-like repos, the Jenkins job name is not equal to the repo name.
+// Bahmni Config Jenkins job is generic but the repo is distribution specific.
 if (repo.match("-config-") == "-config-") {
   project = process.env.configProject;
   repoSplit = repo.split("-");
@@ -21,6 +21,8 @@ if (repo.match("-config-") == "-config-") {
   project = process.env.bahmniAppsProject;
 } else if (repo.match("bahmni-core") == "bahmni-core") {
   project = process.env.bahmniCoreProject;
+} else if (repo.match("bahmni-offline-sync") == "bahmni-offline-sync") {
+  project = process.env.bahmniOfflineSyncProject;
 } else {
   // if project is not provided as input parameter, ie, the job is triggered by a parent project
   if (project == "") {
@@ -28,14 +30,7 @@ if (repo.match("-config-") == "-config-") {
   }
 }
 
-// If branch is "master", server is "test", otherwise, the server is the branch name
-// if (branch == "dev") {
-//   server = "master";
-// } else {
-//   server = branch;
-// }
-server = branch;
-
+server = (branch == "master") ? "dev" : branch;
 
 envvars = envvars +  "project=" + project + "\n";
 envvars = envvars +  "configType=" + configType + "\n";
@@ -50,3 +45,4 @@ fs.appendFile(process.env.WORKSPACE + "/envvars", envvars, function(err) {
     return console.log(err);
   }
 }); 
+  
