@@ -37,6 +37,7 @@ envvars = envvars +  "configType=" + configType + "\n";
 envvars = envvars +  "distro=" + distro + "\n";
 envvars = envvars +  "server=" + server + "\n";
 envvars = envvars +  "branch=" + branch + "\n";
+envvars = envvars +  "organization=" + process.env.organization + "\n";
 console.log(envvars);
 
 // Export the environment variables
@@ -45,4 +46,3 @@ fs.appendFile(process.env.WORKSPACE + "/envvars", envvars, function(err) {
     return console.log(err);
   }
 }); 
-  
