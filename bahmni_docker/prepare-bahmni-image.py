@@ -26,7 +26,7 @@ def setup(skip_container, skip_ansible, yes, distribution):
 
 	container_Name = "bahmni"
 	hostname = "bahmni"
-	base_Image_Name="centos:6.8"
+	base_Image_Name="centos:6.9"
 	client = docker.from_env()
 
 	# Retrieve Git Bahmni PLaybooks repo version
