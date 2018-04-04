@@ -30,6 +30,11 @@ rm -rf /opt/bahmni-web/etc/bahmniapps
 ln -s /mnt/bahmniapps /opt/bahmni-web/etc/bahmniapps
 chown -h bahmni:bahmni /opt/bahmni-web/etc/bahmniapps
 
+# Bahmni Connect
+rm -rf /opt/bahmni-offline/bahmni-connect-apps
+ln -s /mnt/bahmni_connect /opt/bahmni-offline/bahmni-connect-apps
+chown -h bahmni:bahmni /opt/bahmni-offline/bahmni-connect-apps
+
 # Logs
 rm -rf /mnt/logs/openmrs.log
 ln -s /opt/openmrs/openmrs.log /mnt/logs/openmrs.log
