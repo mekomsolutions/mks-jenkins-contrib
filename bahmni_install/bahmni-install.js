@@ -19,6 +19,8 @@ if (repo.match("-config-") == "-config-") {
   distro = repoSplit[repoSplit.length - 1];
 } else if (repo.match("bahmniapps") == "bahmniapps") {
   project = process.env.bahmniAppsProject;
+} else if (repo.match("bahmni-connect") == "bahmni-connect") {
+  project = process.env.bahmniConnectProject;
 } else if (repo.match("bahmni-core") == "bahmni-core") {
   project = process.env.bahmniCoreProject;
 } else if (repo.match("bahmni-offline-sync") == "bahmni-offline-sync") {
