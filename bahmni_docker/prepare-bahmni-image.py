@@ -56,7 +56,7 @@ def setup(skip_container, skip_ansible, yes, distribution):
 		# Render the Jinja2 Dockerfile with appropriate values
 		renderJinja2Dockerfile(distribution, base_Image_Name)
 
-		distro_Image = client.images.build(path='/tmp/bahmni-build')
+		distro_Image = client.images.build(path='/tmp/bahmni-build')[0]
 		click.echo(distro_Image.id[8:21])
 
 		click.echo("Starting new Bahmni temporary container based on '%s' Docker image..." % distro_Image.id[8:21])
