@@ -33,7 +33,7 @@ def setup(skip_container, skip_ansible, yes, distribution):
 	ansible_Home = os.environ.get('HOME') + '/repos/bahmni-playbooks'
 	repo = git.Repo(ansible_Home)
 	assert not repo.bare
-	version = repo.head.reference
+	version = "%s-%s" % (repo.head.reference, repo.head.commit.hexsha[:7])
 
 	if not skip_container:
 		# Build a temporary image
