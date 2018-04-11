@@ -29,11 +29,17 @@ def setup(skip_container, skip_ansible, yes, distribution):
 	base_Image_Name="centos:6.9"
 	client = docker.from_env()
 
-	# Retrieve Git Bahmni PLaybooks repo version
+	# Retrieve Git Bahmni Playbooks repo version
 	ansible_Home = os.environ.get('HOME') + '/repos/bahmni-playbooks'
-	repo = git.Repo(ansible_Home)
-	assert not repo.bare
-	version = "%s-%s" % (repo.head.reference, repo.head.commit.hexsha[:7])
+	ansible_Repo = git.Repo(ansible_Home)
+	assert not ansible_Repo.bare
+	
+	# Retrieve Git MKS Contrib repo version
+	contrib_Home = os.environ.get('HOME') + '/repos/mks-jenkins-contrib'
+	contrib_Repo = git.Repo(contrib_Home)
+	assert not contrib_Repo.bare
+	
+	version = "%s-%s-%s" % (ansible_Repo.head.reference, ansible_Repo.head.commit.hexsha[:7], contrib_Repo.head.commit.hexsha[:7])
 
 	if not skip_container:
 		# Build a temporary image
