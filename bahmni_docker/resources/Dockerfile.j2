@@ -15,5 +15,6 @@ RUN mkdir -p /etc/bahmni-installer
 COPY ./link-mounted-folders.sh /etc/bahmni-installer/
 COPY ./{{distribution}}-local.inventory /etc/bahmni-installer/local.inventory
 COPY ./update-apache-config.sh /etc/bahmni-installer/
+COPY ./move-mysql-datadir.sh /etc/bahmni-installer/
 
 ENTRYPOINT service mysqld restart ; bahmni -i local.inventory start ; /bin/bash

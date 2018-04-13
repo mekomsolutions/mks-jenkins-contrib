@@ -51,6 +51,7 @@ def setup(skip_container, skip_ansible, yes, distribution):
 		os.mkdir('/tmp/bahmni-build')
 		shutil.copyfile('./resources/link-mounted-folders.sh', '/tmp/bahmni-build/link-mounted-folders.sh')
 		shutil.copyfile('./resources/update-apache-config.sh', '/tmp/bahmni-build/update-apache-config.sh')
+		shutil.copyfile('./resources/move-mysql-datadir.sh', '/tmp/bahmni-build/move-mysql-datadir.sh')
 		shutil.copyfile('./resources/%s.setup.yml' % distribution, '/tmp/bahmni-build/%s.setup.yml' % distribution)
 
 		# Render the Jinja2 inventory file to be copied on the container
