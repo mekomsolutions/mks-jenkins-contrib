@@ -36,7 +36,7 @@ ln -s /mnt/bahmni_connect /opt/bahmni-offline/bahmni-connect-apps
 chown -h bahmni:bahmni /opt/bahmni-offline/bahmni-connect-apps
 
 # Backups
-ln -s /mnt/backups /data
+ln -s /mnt/data/db_dumps /data
 
 # Logs
 rm -rf /mnt/logs/openmrs.log
@@ -44,3 +44,4 @@ ln -s /opt/openmrs/openmrs.log /mnt/logs/openmrs.log
 
 # Ensure correct access rights
 sudo chown -R bahmni:bahmni /mnt/
+sudo chown -R mysql:mysql /mnt/data/mysql_datadir
