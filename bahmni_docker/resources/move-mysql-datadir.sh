@@ -48,6 +48,14 @@ if [[ ! -z $1 ]] && [[ ! -z $2 ]]
             echo -e "${socket[name]}=${socket[path]}" >> $1
         }
     fi
+
+    # Add the client section
+    echo "Add the '[client]' section and values..."
+    echo "# Add the client section - Mekom Solutions" >> $1
+    echo "[client]" >> $1
+    echo "port=3306" >> $1
+    echo "${socket[name]}=${socket[path]}/mysql.sock" >> $1
+
 } else {
     echo "[ERROR] Parameters not provided. Please provide the 'my.cnf' file path and the new MySQL data directory path as command line parameters"
     echo "Ex: ./move_mysql_datadir.sh /etc/my.cnf /mnt/data/mysql_datadir" 
