@@ -45,9 +45,7 @@ ln -s /mnt/data/bahmni_home /home/bahmni
 chown -R bahmni:bahmni /mnt/data/bahmni_home
 
 # Logs
-mv -f /opt/openmrs/openmrs.log /mnt/logs/
-chown -R bahmni:bahmni /mnt/logs/openmrs.log
-ln -s /mnt/logs/openmrs.log /opt/openmrs/
-
-# Ensure MySQL datadir access rights
-chown -R mysql:mysql /mnt/data/mysql_datadir
+echo "" > /opt/openmrs/openmrs.log
+chown -R bahmni:bahmni /mnt/logs/
+rm -f /mnt/logs/openmrs.log
+ln -s /opt/openmrs/openmrs.log /mnt/logs
