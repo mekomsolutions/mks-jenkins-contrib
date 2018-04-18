@@ -44,6 +44,10 @@ rm -rf /home/bahmni
 ln -s /mnt/data/bahmni_home /home/bahmni
 chown -R bahmni:bahmni /mnt/data/bahmni_home
 
+# Configuration Checksums folder
+ln -s /mnt/data/configuration_checksums /opt/openmrs/
+chown -R bahmni:bahmni /mnt/data/configuration_checksums
+
 # Logs
 echo "" > /opt/openmrs/openmrs.log
 chown -R bahmni:bahmni /mnt/logs/
