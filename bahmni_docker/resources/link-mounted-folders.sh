@@ -39,14 +39,18 @@ chown -R bahmni:bahmni /mnt/bahmni_connect
 ln -s /mnt/data/db_dumps /data
 chown -R bahmni:bahmni /mnt/data/db_dumps
 
-# Bahmni Home
-rm -rf /home/bahmni
-ln -s /mnt/data/bahmni_home /home/bahmni
-chown -R bahmni:bahmni /mnt/data/bahmni_home
+if [ "$1" = "prod" ]
+  then {
+  # Bahmni Home
+  rm -rf /home/bahmni
+  ln -s /mnt/data/bahmni_home /home/bahmni
+  chown -R bahmni:bahmni /mnt/data/bahmni_home
 
-# Configuration Checksums folder
-ln -s /mnt/data/configuration_checksums /opt/openmrs/
-chown -R bahmni:bahmni /mnt/data/configuration_checksums
+  # Configuration Checksums folder
+  ln -s /mnt/data/configuration_checksums /opt/openmrs/
+  chown -R bahmni:bahmni /mnt/data/configuration_checksums
+}
+fi
 
 # Logs
 echo "" > /opt/openmrs/openmrs.log
