@@ -89,8 +89,12 @@ def setup(skip_container, skip_ansible, yes, distribution):
 	if not yes:
 		if click.confirm("Do you wish to locally commit the '%s' container as '%s/%s:%s-%s' Docker image?" % (container_Name, docker_Username, container_Name, distribution, version)):
 			commit_Image(docker_Username, bahmni_Container, distribution, version)
+			if click.confirm("Do you wish to locally commit the '%s' container as '%s/%s:%s-latest' Docker image?" % (container_Name, docker_Username, container_Name, distribution)):
+				commit_Image(docker_Username, bahmni_Container, distribution, "latest")
 			if click.confirm("Do you wish to push the newly created '%s/%s:%s-%s' Docker image to remote repository?" % (docker_Username, container_Name, distribution, version)):
 				push_Image(client, docker_Username, bahmni_Container, distribution, version)
+			if click.confirm("Do you wish to push the newly created '%s/%s:%s-latest' Docker image to remote repository?" % (docker_Username, container_Name, distribution)):
+				push_Image(client, docker_Username, bahmni_Container, distribution, "latest")
 			if click.confirm("Do you wish to destroy the '%s' temporary container" % container_Name):
 				destroy_Container(bahmni_Container)
 	else:
