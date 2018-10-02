@@ -1,0 +1,36 @@
+{
+  "name": "vault",
+  "version": "0.1.0",
+  "description": "Vault command line utility",
+  "bin": {
+    "vault": "src/index.js"
+  },
+  "scripts": {
+    "code-format": "prettier --find-config-path --write '{src,spec}/**/*.{js,json}'",
+    "test": "jasmine",
+    "build": "npm install && npm run code-format && npm run test",
+    "all": "npm install && npm run build"
+  },
+  "keywords": [
+    "vault"
+  ],
+  "author": "Romain Buisson",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
+    "commander": "^2.16.0",
+    "lodash": "^4.17.10",
+    "request": "^2.87.0",
+    "x509-parser": "^1.1.1"
+  },
+  "devDependencies": {
+    "app-root-path": "^2.0.1",
+    "ent": "^2.2.0",
+    "fs-extra": "^5.0.0",
+    "jasmine": "^2.8.0",
+    "karma": "^1.7.1",
+    "prettier": "1.10.2"
+  }
+}
